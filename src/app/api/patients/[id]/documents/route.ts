@@ -3,6 +3,7 @@ import { db } from "@/db";
 import { documents, patients } from "@/db/schema";
 import { eq, and, desc } from "drizzle-orm";
 import { getSession } from "@/lib/auth";
+import { cleanEditorHtml } from "@/lib/file-storage";
 import { z } from "zod";
 
 const createSchema = z.object({
@@ -77,7 +78,7 @@ export async function POST(
         doctorId: session.doctorId,
         type: data.type,
         title: data.title,
-        content: data.content,
+        content: cleanEditorHtml(data.content),
       })
       .returning()
       .get();

@@ -3,6 +3,7 @@ import { db } from "@/db";
 import { documents } from "@/db/schema";
 import { eq, and } from "drizzle-orm";
 import { getSession } from "@/lib/auth";
+import { cleanEditorHtml } from "@/lib/file-storage";
 import { z } from "zod";
 
 const updateSchema = z.object({
@@ -53,7 +54,8 @@ export async function PUT(
       updatedAt: new Date().toISOString(),
     };
     if (data.title !== undefined) updateData.title = data.title;
-    if (data.content !== undefined) updateData.content = data.content;
+    if (data.content !== undefined)
+      updateData.content = cleanEditorHtml(data.content);
 
     const updated = db
       .update(documents)

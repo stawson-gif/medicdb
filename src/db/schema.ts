@@ -53,3 +53,26 @@ export const documents = sqliteTable("documents", {
     .notNull()
     .$defaultFn(() => new Date().toISOString()),
 });
+
+// ── Patient file attachments ───────────────────────────
+export const patientFiles = sqliteTable("patient_files", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  patientId: integer("patient_id")
+    .notNull()
+    .references(() => patients.id, { onDelete: "cascade" }),
+  doctorId: integer("doctor_id")
+    .notNull()
+    .references(() => doctors.id, { onDelete: "cascade" }),
+  originalName: text("original_name").notNull(),
+  storedName: text("stored_name").notNull().unique(),
+  mimeType: text("mime_type").notNull(),
+  size: integer("size").notNull(),
+  editableContent: text("editable_content"),
+  conversionWarnings: text("conversion_warnings"),
+  createdAt: text("created_at")
+    .notNull()
+    .$defaultFn(() => new Date().toISOString()),
+  updatedAt: text("updated_at")
+    .notNull()
+    .$defaultFn(() => new Date().toISOString()),
+});

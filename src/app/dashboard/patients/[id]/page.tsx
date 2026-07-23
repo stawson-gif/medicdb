@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback, use } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import PatientFiles from "@/components/PatientFiles";
 import {
   DOCUMENT_TYPE_LABELS,
   DOCUMENT_TYPE_COLORS,
@@ -207,6 +208,9 @@ export default function PatientPage({
           ))}
         </div>
       </div>
+
+      {/* Uploaded patient files */}
+      <PatientFiles patientId={id} />
 
       {/* Documents header */}
       <div className="flex items-center justify-between mb-6">

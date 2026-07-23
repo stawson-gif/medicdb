@@ -98,6 +98,51 @@
   pointer-events: none;
 }
 
+/* ── Word preview ────────────────────────────────────── */
+.word-preview {
+  font-family: "Times New Roman", Times, serif;
+  font-size: 16px;
+  line-height: 1.55;
+  color: #0f172a;
+}
+
+.word-preview p {
+  margin-bottom: 0.65em;
+}
+
+.word-preview h1,
+.word-preview h2,
+.word-preview h3 {
+  font-weight: 700;
+  margin: 1em 0 0.5em;
+}
+
+.word-preview h1 { font-size: 1.6rem; }
+.word-preview h2 { font-size: 1.35rem; }
+.word-preview h3 { font-size: 1.15rem; }
+
+.word-preview ul,
+.word-preview ol {
+  padding-left: 1.75rem;
+  margin: 0.5em 0;
+}
+
+.word-preview ul { list-style: disc; }
+.word-preview ol { list-style: decimal; }
+
+.word-preview table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+
+.word-preview th,
+.word-preview td {
+  border: 1px solid #64748b;
+  padding: 0.5rem 0.65rem;
+  vertical-align: top;
+}
+
 /* ── Scrollbar ───────────────────────────────────────── */
 ::-webkit-scrollbar {
   width: 6px;

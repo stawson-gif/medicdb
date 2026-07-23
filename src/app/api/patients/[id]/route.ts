@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/db";
-import { patients } from "@/db/schema";
+import { patientFiles, patients } from "@/db/schema";
 import { eq, and } from "drizzle-orm";
 import { getSession } from "@/lib/auth";
+import { removeStoredFile } from "@/lib/file-storage";
 import { z } from "zod";
 
 const updateSchema = z.object({
@@ -99,17 +100,42 @@ export async function DELETE(
   }
 
   const { id } = await params;
-  const deleted = db
-    .delete(patients)
+  const patientId = Number(id);
+  const ownedPatient = db
+    .select({ id: patients.id })
+    .from(patients)
     .where(
-      and(eq(patients.id, Number(id)), eq(patients.doctorId, session.doctorId))
+      and(eq(patients.id, patientId), eq(patients.doctorId, session.doctorId))
     )
-    .returning()
     .get();
 
-  if (!deleted) {
+  if (!ownedPatient) {
     return NextResponse.json({ error: "Пациент не найден" }, { status: 404 });
   }
+
+  const files = db
+    .select({
+      patientId: patientFiles.patientId,
+      storedName: patientFiles.storedName,
+    })
+    .from(patientFiles)
+    .where(
+      and(
+        eq(patientFiles.patientId, patientId),
+        eq(patientFiles.doctorId, session.doctorId)
+      )
+    )
+    .all();
+
+  await Promise.all(
+    files.map((file) => removeStoredFile(file.patientId, file.storedName))
+  );
+
+  db.delete(patients)
+    .where(
+      and(eq(patients.id, patientId), eq(patients.doctorId, session.doctorId))
+    )
+    .run();
 
   return NextResponse.json({ ok: true });
 }
